@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+
+{% if search_results %}
+    <ul>
+    {% for item in search_results %}
+      <li>{{ item }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+{% endblock %}

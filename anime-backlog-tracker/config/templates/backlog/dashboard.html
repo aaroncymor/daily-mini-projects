@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+<div>
+  <form action="{% url 'search' %}" method="post">
+    {% csrf_token %}
+    {% render_field search_form.title type="search" placeholder=search_form.title.label %}
+  <input type="submit" name="Search" />
+  </form>
+</div>
+
+{% if search_results %}
+<ul>
+  {% for title in search_results %}
+    <li>{{ title }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
