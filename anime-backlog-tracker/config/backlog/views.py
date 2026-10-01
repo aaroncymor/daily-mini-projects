@@ -1,17 +1,17 @@
 import httpx
-from typing import Any, List
+from typing import Any
 
 from django.shortcuts import render
 from django.conf import settings
 
-from .forms import SearchForm
+from .forms import SearchForm, BacklogItemForm
 from .models import BacklogItem
 
 
 IN_MEMORY_CACHE = {}
 
 
-## helpers
+# helpers
 def cache_query_results(results: dict[str, Any], media_type: str) -> bool:
 
     if 'data' not in results:
@@ -34,16 +34,18 @@ def cache_query_results(results: dict[str, Any], media_type: str) -> bool:
     return True
 
 
-def parse_db_results(db_results) -> List[str]:
-    lst = db_results.values_list('title', flat=True)
-    return lst
+def parse_db_results(db_results) -> list[dict[str, Any]]:
+    return db_results.values('mal_id', 'title')
 
 
-def parse_api_json(api_results: dict[str, Any]) -> List[str]:
+def parse_api_json(api_results: dict[str, Any]) -> list[dict[str, Any]]:
     results = []
     if 'data' in api_results:
         for res in api_results['data']:
-            results.append(res['title'])
+            results.append({
+                'id': res['malId'],
+                'title': res['title'],
+            })
     return results
 
 
@@ -108,4 +110,79 @@ def search(request, *args, **kwargs):
     return render(request, 'backlog/dashboard.html', {
         'search_form': SearchForm(),
         'search_results': []
+    })
+
+
+def get_backlog_item(request, mal_id, *args, **kwargs):
+
+    try:
+        backlog_item = BacklogItem.objects.get(mal_id=mal_id)
+
+        return render(request, 'backlog/backlog_item_detail.html', {
+            'backlog_item': backlog_item,
+            'backlog_item_form': BacklogItemForm({
+                'id': backlog_item.id,
+                'title': backlog_item.title,
+                'mal_id': backlog_item.mal_id,
+                'media_type': backlog_item.media_type,
+                'current_progress': backlog_item.current_progress,
+                'total_units': backlog_item.total_units,
+                'start_date': backlog_item.start_date,
+                'target_date': backlog_item.target_date
+            })
+        })
+    except BacklogItem.DoesNotExist:
+        return render(request, 'backlog/backlog_item_detail.html', {
+            'error': "Backlog item doesn't exist."
+        })
+
+    return render(request, 'backlog/backlog_item_detail.html', {
+        'error': "Unknown error occured."
+    })
+
+
+def update_backlog_item(request, mal_id, *args, **kwargs):
+    if request.POST:
+        try:
+            backlog_item = BacklogItem.objects.get(mal_id=mal_id)
+            id = request.POST.get('id')
+            mal_id = request.POST.get('mal_id')
+            title = request.POST.get('title', '')
+            media_type = request.POST.get('media_type', 'anime')
+            current_progress = request.POST.get('current_progress', 0)
+            total_units = request.POST.get('total_units', 0)
+            start_date = request.POST.get('start_date')
+            target_date = request.POST.get('target_date')
+
+            print("id", id)
+            print("mal_id", mal_id)
+            print("title", title)
+            print("media_type", media_type)
+            print("current_progress", current_progress)
+            print("total_units", total_units)
+            print("start_date", start_date)
+            print("target_date", target_date)
+
+
+            return render(request, 'backlog/backlog_item_detail.html', {
+                'backlog_item': backlog_item,
+                'backlog_item_form': BacklogItemForm({
+                    'id': id,
+                    'mal_id': mal_id,
+                    'title': title,
+                    'media_type': media_type,
+                    'current_progress': current_progress,
+                    'total_units': total_units,
+                    'start_date': start_date,
+                    'target_date': target_date
+                }),
+            })
+        except BacklogItem.DoesNotExist:
+            return render(request, 'backlog/backlog_item_detail.html', {
+                'backlog_item_form': BacklogItemForm(),
+                'error': "Backlog item doesn't exist."
+            })
+
+    return render(request, 'backlog/backlog_item_detail.html', {
+        'backlog_item_form': BacklogItemForm(),
     })

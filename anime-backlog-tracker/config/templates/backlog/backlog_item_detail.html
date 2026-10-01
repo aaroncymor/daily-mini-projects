@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+  <div>
+    {% if error %}
+      {{ error }}
+    {% endif%}
+
+    {% if backlog_item_form and backlog_item %}
+      <form
+        action="{% url 'update-backlog-item' backlog_item.mal_id %}"
+        method="post"
+      >
+        {% csrf_token %}
+        <div>
+        {{ backlog_item_form.id.as_hidden }}
+        </div>
+        <div>
+        {{ backlog_item_form.title }}
+        </div>
+        <div>
+        {{ backlog_item_form.mal_id.as_hidden }}
+        </div>
+        <div>
+        {{ backlog_item_form.media_type }}
+        </div>
+        <div>
+        {{ backlog_item_form.current_progress }}
+        </div>
+        <div>
+        {{ backlog_item_form.total_units }}
+        </div>
+        <div>
+        {{ backlog_item_form.start_date }}
+        </div>
+        <div>
+        {{ backlog_item_form.target_date }}
+        </div>
+        <input type="submit" name="Submit" />
+      </form>
+    {% endif %}
+  </div>
+{% endblock %}
