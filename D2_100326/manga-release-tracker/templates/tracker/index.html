@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+  <input
+    class="form-control" type="search" name="search"
+    placeholders="Search mangas..." hx-post=""
+  >
+
+  {% partialdef mangas_search_list inline %}
+    <ul id="search-results">
+    </ul>
+  {% endpartialdef %}
+
+{% endblock %}
