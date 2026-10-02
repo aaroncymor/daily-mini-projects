@@ -43,7 +43,7 @@ def parse_api_json(api_results: dict[str, Any]) -> list[dict[str, Any]]:
     if 'data' in api_results:
         for res in api_results['data']:
             results.append({
-                'id': res['malId'],
+                'mal_id': res['malId'],
                 'title': res['title'],
             })
     return results
@@ -163,6 +163,16 @@ def update_backlog_item(request, mal_id, *args, **kwargs):
             print("start_date", start_date)
             print("target_date", target_date)
 
+            # updating...
+            backlog_item.current_progress = current_progress
+            backlog_item.total_units = total_units
+            backlog_item.start_date = start_date
+            backlog_item.target_date = target_date
+            backlog_item.save()
+
+            backlog_item.refresh_from_db()
+
+            print("estimate days", backlog_item.estimates_in_days)
 
             return render(request, 'backlog/backlog_item_detail.html', {
                 'backlog_item': backlog_item,

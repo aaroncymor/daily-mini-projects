@@ -9,6 +9,12 @@
     {% endif%}
 
     {% if backlog_item_form and backlog_item %}
+      {% if backlog_item.estimates_in_days is not None %}
+        <p>Estimates: {{ backlog_item.estimates_in_days }} </p>
+      {% else %}
+        <p>Start Date or Target Date not set.</p>
+      {% endif %}
+
       <form
         action="{% url 'update-backlog-item' backlog_item.mal_id %}"
         method="post"

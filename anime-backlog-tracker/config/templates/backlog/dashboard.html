@@ -19,7 +19,11 @@
         href="{% url 'get-backlog-item' backlog_item.mal_id %}"
         target="_blank"
       >
-        {{ backlog_item.title }}
+        {% if backlog.estimates_in_days %}
+          {{ backlog_item.title }} - {{ backlog_item.estimates_in_days }} days.
+        {% else %}
+          {{ backlog_item.title }}
+        {% endif %}
       </a>
   </li>
   {% endfor %}
