@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>My Tasks </h2>
+
+  <form hx-post="{% url 'task-create' %}"
+    hx-target="#task-list"
+    hx-swap="beforeend"
+    hx-on::after-request="this.reset()"
+  >
+    {% csrf_token %}
+    <input type="text" name="title" placeholder="Add a new task..." required>
+    <button type="submit">Add Task</button>
+  </form>
+
+  <!-- READ: task list container -->
+  <ul id="task-list">
+    {% for task in tasks %}
+      {% partialdef task-item inline %}
+        <!-- Partial definition for a single task row -->
+      <li id="task-{{ task.id }}" x-data="{ editing: {% if error %}true{% else %}false{% endif %} }"
+        style="margin: 8px 0;"
+      >
+        <!-- READ MODE -->
+        <div x-show="!editing">
+          <span>{{ task.title }}</span>
+          <button @click="editing = true">✏️ Edit</button>
+
+          <!-- DELETE -->
+          <button hx-delete="{% url 'task-delete' task.id %}"
+                  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                  hx-target="#task-{{ task.id }}"
+                  hx-swap="outerHTML"
+                  hx-confirm="Delete this task?">
+            🗑️ Delete
+          </button>
+        </div>
+
+        <div x-show="editing">
+          <form hx-post="{% url 'task-update' task.id %}"
+                hx-target="#task-{{ task.id }}"
+                hx-swap="outerHTML"
+          >
+            {% csrf_token %}
+
+            {% if error %}
+              <p style="color: red; margin: 0; font-size: 0.8em">{{ error }}</p>
+            {% endif %}
+
+            <input type="text" name="title" value={{ submitted_title|default:task.title }}>
+            <button type="submit">💾 Save</button>
+            <button type="button" @click="editing = false">Cancel</button>
+          </form>
+        </div>
+      </li>
+      {% endpartialdef %}
+    {% endfor %}
+  </ul>
+{% endblock %}
