@@ -23,14 +23,13 @@
   </div> <!-- #searchManga -->
 
   <!-- #subscribedManga -->
-  <div id="subscribedManga">
-    <ul>
-      {% for manga_sub in manga_subs %}
-        <li>{{ manga_sub.title }}</li>
-      {% empty %}
-        <li>No subscribed items yet.</li>
-      {% endfor %}
-    </ul>
+  <div
+    id="subscribedManga"
+    hx-get="{% url 'subscribed_manga_list' %}"
+    hx-trigger="mangaSubscribed from:body"
+    hx-swap="outerHTML"
+  >
+    {% include 'tracker/partials/subscribed_list.html' %}
   </div> <!-- end #subscribedManga -->
 </section> <!-- end dashboard -->
 {% endblock %}

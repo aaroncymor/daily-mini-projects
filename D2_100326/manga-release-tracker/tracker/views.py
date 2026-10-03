@@ -9,7 +9,7 @@ from django.conf import settings
 
 from .models import MangaSubscription
 
-IN_MEMORY_CACHE = {}
+# IN_MEMORY_CACHE = {}
 
 
 # helpers
@@ -55,20 +55,23 @@ def parse_and_save_results(response: dict[str, Any]) -> list[dict[str, Any]]:
             'manga_id': manga_id,
             'title': en_title,
             'status': status,
-            'current_chapter': get_latest_chapter(manga_id),
+            'is_subscribed': False,
         }
 
         print("MANGA INFO", manga_info)
         try:
             print(f"Searching for manga with {manga_info['manga_id']}...")
-            manga_subscription = MangaSubscription.objects.get(
+            manga_sub = MangaSubscription.objects.get(
                 manga_id=manga_info['manga_id']
             )
+            manga_info['is_subscribed'] = manga_sub.is_subscribed
+            manga_info['current_chapter'] = manga_sub.current_chapter
         except MangaSubscription.DoesNotExist:
             # create record if does not exist
             print(f"Creating record for manga with {manga_info['manga_id']}...")
 
             # temporarily convert to UUID
+            manga_info['current_chapter'] = get_latest_chapter(manga_id)
             # manga_info['manga_id'] = uuid.UUID(manga_info['manga_id'])
             MangaSubscription.objects.create(**manga_info)
             # manga_info['manga_id'] = str(manga_info['manga_id'])
@@ -87,22 +90,27 @@ def search(title: str) -> list[dict[str, Any]]:
     """
 
     # check in cache first
-    if title in IN_MEMORY_CACHE:
-        return IN_MEMORY_CACHE[title]
+    # if title in IN_MEMORY_CACHE:
+    #     return IN_MEMORY_CACHE[title]
 
     # if not in memory cache, query database
     db_results = MangaSubscription.objects.filter(title__icontains=title)
     print("DB RESULTS", db_results)
     if db_results.count() > 0:
-        manga_subs = db_results.values('manga_id', 'title', 'status')
+        manga_subs = db_results.values(
+            'manga_id', 'title', 'status',
+            'current_chapter', 'is_subscribed',
+        )
 
         res = [{
             "manga_id": str(manga_sub["manga_id"]),
             "title": manga_sub["title"],
-            "status": manga_sub["status"]
+            "status": manga_sub["status"],
+            "current_chapter": manga_sub["current_chapter"],
+            "is_subscribed": manga_sub["is_subscribed"]
         } for manga_sub in manga_subs]
 
-        IN_MEMORY_CACHE[title] = res
+        # IN_MEMORY_CACHE[title] = res
         return res
 
     # if not in database, request third party api
@@ -114,7 +122,7 @@ def search(title: str) -> list[dict[str, Any]]:
     print("PARSING AND SAVING RESULTS...")
     res = parse_and_save_results(response.json())
     print("RES", res)
-    IN_MEMORY_CACHE[title] = res
+    # IN_MEMORY_CACHE[title] = res
     return res
 
 
@@ -140,26 +148,31 @@ def manga_search(request, *args, **kwargs):
 
 def manga_subscribe(request, manga_id, *args, **kwargs):
     if request.POST:
-        try:
-            manga_sub = MangaSubscription.objects.get(manga_id=manga_id)
-            subscribe = request.POST.get("subscribe")
+        manga_sub = MangaSubscription.objects.get(manga_id=manga_id)
+        subscribe = request.POST.get("subscribe")
 
-            manga_sub.is_subscribed = subscribe
-            manga_sub.save()
+        manga_sub.is_subscribed = True if subscribe == "true" else False
+        manga_sub.save()
 
-            manga_sub.refresh_from_db()
-
+        # If request originated from inside #subscribedManga, return
+        # the updated subscribed list
+        if 'subscribed-' in request.META.get('HTTP_HX_TARGET', ''):
+            manga_subs = MangaSubscription.objects.filter(is_subscribed=True)
+            response = render(
+                request,
+                "tracker/partials/subscribed_list.html",
+                {"manga_subs": manga_subs}
+            )
+        else:
+            # default response for search result item
             return render(
                 request,
-                'tracker/index.html#manga-item',
-                context={"manga_sub": manga_sub}
+                'tracker/partials/search_results.html#manga-item',
+                context={"res": manga_sub, "manga_sub": manga_sub}
             )
-        except Exception:
-            return render(
-                request,
-                'tracker/index.html',
-                context={'error': 'Manga does not exist'}
-            )
+
+        response['HX-Trigger'] = 'mangaSubscribed'
+        return response
 
     return HttpResponse(status=400)
 
@@ -167,3 +180,12 @@ def manga_subscribe(request, manga_id, *args, **kwargs):
 def manga_list(request, *args, **kwargs):
     manga_subs = MangaSubscription.objects.filter(is_subscribed=True)
     return render(request, "tracker/index.html", {"manga_subs": manga_subs})
+
+
+def subscribed_manga_list(request, *args, **kwargs):
+    manga_subs = MangaSubscription.objects.filter(is_subscribed=True)
+    return render(
+        request,
+        "tracker/partials/subscribed_list.html",
+        {"manga_subs": manga_subs}
+    )
