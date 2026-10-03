@@ -11,9 +11,12 @@
   <!-- Tailwind CSS for Development ONLY -->
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <!--<link rel="icon" href="favicon.png">-->
+  {% block xtra_head %}{% endblock%}
 </head>
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-ext="response-targets">
     {% block content %}
     {% endblock %}
+
+    {% block xtra_script %}{% endblock%}
   </body>
 </html>

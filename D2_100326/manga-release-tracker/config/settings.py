@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 
 import os
 from pathlib import Path
-from python_dotenv import load_dotenv
+from dotenv import load_dotenv
 
 
 load_dotenv()
@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # custom app
-    'tracker.apps.TrackerConfig.',
+    'tracker.apps.TrackerConfig',
 ]
 
 MIDDLEWARE = [

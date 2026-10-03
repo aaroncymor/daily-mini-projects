@@ -1,0 +1,22 @@
+<div id="searchResults">
+  <ul class="list-disc">
+    {% for res in search_results %}
+      <li id="mangasub-{{ res.manga_id }}" class=>
+        <div class="flex flex-row">
+          {{ res.title }}
+          <form
+            hx-post="{% url 'manga_subscribe' res.manga_id %}"
+          >
+            {% csrf_token %}
+            <input type="hidden" name="subscribed"
+              value="{% if res.is_subscribed %}false{% else %}true{% endif %}"
+            >
+            <button class="cursor-pointer" type="submit">&nbsp;|&nbsp[Subscribe]</button>
+          </form>
+        </div>
+      </li>
+    {% empty %}
+      <li>No results found.</li>
+    {% endfor %}
+  </ul>
+</div>

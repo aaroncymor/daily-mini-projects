@@ -3,14 +3,34 @@
 {% load static %}
 
 {% block content %}
-  <input
-    class="form-control" type="search" name="search"
-    placeholders="Search mangas..." hx-post=""
-  >
 
-  {% partialdef mangas_search_list inline %}
-    <ul id="search-results">
+<!-- #dashboard -->
+<section id="dashboard">
+  <!-- #searchmanga -->
+  <div id="searchManga">
+    <form>
+      {% csrf_token %}
+      <input
+        type="search" name="title"
+        placeholder="Search mangas..."
+        hx-post="{% url 'manga_search' %}"
+        hx-target="#searchResults"
+        hx-swap="outerHTML"
+        hx-trigger="keyup changed delay:500ms"
+      >
+    </form>
+    {% include 'tracker/partials/search_results.html' %}
+  </div> <!-- #searchManga -->
+
+  <!-- #subscribedManga -->
+  <div id="subscribedManga">
+    <ul>
+      {% for manga_sub in manga_subs %}
+        <li>{{ manga_sub.title }}</li>
+      {% empty %}
+        <li>No subscribed items yet.</li>
+      {% endfor %}
     </ul>
-  {% endpartialdef %}
-
+  </div> <!-- end #subscribedManga -->
+</section> <!-- end dashboard -->
 {% endblock %}

@@ -3,7 +3,7 @@ from django.db import models
 
 # Create your models here.
 class MangaSubscription(models.Model):
-    manga_id = models.UUIDField()
+    manga_id = models.UUIDField(unique=True)
     title = models.TextField()
     status = models.CharField(max_length=50)
     is_subscribed = models.BooleanField(default=False)
