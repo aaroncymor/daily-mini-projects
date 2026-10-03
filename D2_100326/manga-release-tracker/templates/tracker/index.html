@@ -10,26 +10,12 @@
   <div id="searchManga">
     <form>
       {% csrf_token %}
-      <input
-        type="search" name="title"
-        placeholder="Search mangas..."
-        hx-post="{% url 'manga_search' %}"
-        hx-target="#searchResults"
-        hx-swap="outerHTML"
-        hx-trigger="keyup changed delay:500ms"
-      >
+      <input type="search" name="title" placeholder="Search mangas..." hx-post="{% url 'manga_search' %}"
+        hx-target="#searchResults" hx-swap="outerHTML" hx-trigger="keyup changed delay:500ms">
     </form>
     {% include 'tracker/partials/search_results.html' %}
   </div> <!-- #searchManga -->
 
-  <!-- #subscribedManga -->
-  <div
-    id="subscribedManga"
-    hx-get="{% url 'subscribed_manga_list' %}"
-    hx-trigger="mangaSubscribed from:body"
-    hx-swap="outerHTML"
-  >
-    {% include 'tracker/partials/subscribed_list.html' %}
-  </div> <!-- end #subscribedManga -->
-</section> <!-- end dashboard -->
+  {% include 'tracker/partials/subscribed_list.html' %}
+</section>
 {% endblock %}

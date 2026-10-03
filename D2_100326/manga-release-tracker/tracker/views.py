@@ -1,3 +1,4 @@
+import json
 import uuid
 import httpx
 
@@ -18,8 +19,10 @@ def get_latest_chapter(manga_id: str) -> str:
     response = httpx.get(f"{settings.MANGADEX_BASE_URL}/manga/{manga_id}/aggregate")
     if response.status_code != 200:
         raise Exception(f"An error occured trying to get aggregate data from {manga_id}")
-
-    return max(response.json()['volumes'].keys())
+    volumes = response.json().get('volumes')
+    if not volumes:
+        return "none"
+    return max(volumes.keys(), key=lambda k: float(k) if k not in ("", "none") else -1)
 
 
 def parse_and_save_results(response: dict[str, Any]) -> list[dict[str, Any]]:
@@ -156,7 +159,7 @@ def manga_subscribe(request, manga_id, *args, **kwargs):
 
         # If request originated from inside #subscribedManga, return
         # the updated subscribed list
-        if 'subscribed-' in request.META.get('HTTP_HX_TARGET', ''):
+        if request.META.get('HTTP_HX_TARGET', '') == "subscribedManga":
             manga_subs = MangaSubscription.objects.filter(is_subscribed=True)
             response = render(
                 request,
@@ -165,13 +168,14 @@ def manga_subscribe(request, manga_id, *args, **kwargs):
             )
         else:
             # default response for search result item
-            return render(
+            response = render(
                 request,
                 'tracker/partials/search_results.html#manga-item',
                 context={"res": manga_sub, "manga_sub": manga_sub}
             )
 
-        response['HX-Trigger'] = 'mangaSubscribed'
+        # response['HX-Trigger'] = 'mangaSubscribed'
+        response['HX-Trigger'] = json.dumps({'mangaSubscribed': {"target": "body"}})
         return response
 
     return HttpResponse(status=400)

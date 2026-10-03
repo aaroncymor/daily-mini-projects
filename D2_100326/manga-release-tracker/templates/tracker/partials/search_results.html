@@ -1,35 +1,30 @@
 <div id="searchResults">
   <ul style="list-style-type: disc;">
     {% for res in search_results %}
-      {% partialdef manga-item inline %}
-      {% with item=manga_sub|default:res %}
-      <li id="mangasub-{{ item.manga_id }}" class="p-2 list-disc">
-        <div class="flex flex-row">
-          {{ item.title }}&nbsp;|&nbsp;{{ item.current_chapter }}
-          <form
-            hx-post="{% url 'manga_subscribe' item.manga_id %}"
-            hx-target="#mangasub-{{ item.manga_id }}"
-            hx-swap="outerHTML"
-          >
-            {% csrf_token %}
-            <input type="hidden" name="subscribe"
-              value="{% if item.is_subscribed %}false{% else %}true{% endif %}"
-            >
-            <button class="cursor-pointer" type="submit">
-              <span>&nbsp;|&nbsp</span>
-              <span class="text-blue-500">
-                {% if item.is_subscribed %}
-                  [Remove from Watchlist]
-                {% else %}
-                  [Add to Watchlist]
-                {% endif %}
-              </span>
-            </button>
-          </form>
-        </div>
-      </li>
-      {% endwith %}
-      {% endpartialdef %}
+    {% partialdef manga-item inline %}
+    {% with item=manga_sub|default:res %}
+    <li id="mangasub-{{ item.manga_id }}" class="p-2 list-disc">
+      <div class="flex flex-row">
+        {{ item.title }}&nbsp;|&nbsp;{{ item.current_chapter }}
+        <form hx-post="{% url 'manga_subscribe' item.manga_id %}" hx-target="#mangasub-{{ item.manga_id }}"
+          hx-swap="outerHTML">
+          {% csrf_token %}
+          <input type="hidden" name="subscribe" value="{% if item.is_subscribed %}false{% else %}true{% endif %}">
+          <button class="cursor-pointer" type="submit">
+            <span>&nbsp;|&nbsp;</span>
+            <span class="text-blue-500">
+              {% if item.is_subscribed %}
+              [Remove from Watchlist]
+              {% else %}
+              [Add to Watchlist]
+              {% endif %}
+            </span>
+          </button>
+        </form>
+      </div>
+    </li>
+    {% endwith %}
+    {% endpartialdef %}
     {% endfor %}
   </ul>
 </div>
