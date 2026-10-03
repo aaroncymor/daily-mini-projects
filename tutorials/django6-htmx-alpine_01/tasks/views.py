@@ -28,8 +28,7 @@ def task_update(request, pk):
                 "task": task,
                 "error": "Title cannot be empty!",
                 "submitted_title": submitted_title
-            },
-            status=422
+            }
         )
 
     task.title = submitted_title

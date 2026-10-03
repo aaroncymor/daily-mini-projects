@@ -45,6 +45,8 @@
 
             {% if error %}
               <p style="color: red; margin: 0; font-size: 0.8em">{{ error }}</p>
+            {% else %}
+              <p>No error</p>
             {% endif %}
 
             <input type="text" name="title" value={{ submitted_title|default:task.title }}>
