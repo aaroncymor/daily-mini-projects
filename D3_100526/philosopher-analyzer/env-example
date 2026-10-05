@@ -1,0 +1,2 @@
+OPENLIB_BASE_URL="https://openlibrary.org"
+DJANGO_SECRET_KEY="secret"
