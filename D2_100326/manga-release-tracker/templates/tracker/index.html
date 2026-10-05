@@ -17,5 +17,14 @@
   </div> <!-- #searchManga -->
 
   {% include 'tracker/partials/subscribed_list.html' %}
+
+  <div id="notificationLog">
+    <h2>Watchlist News</h2>
+    <ul>
+      {% for notif in notifs %}
+        <li> {{ notif.subject }}</li>
+      {% endfor %}
+    </ul>
+  </div>
 </section>
 {% endblock %}
