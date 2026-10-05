@@ -1,2 +1,2 @@
-OPENLIB_BASE_URL="https://openlibrary.org"
+PHILOSOPHERSAPI_BASE_URL="https://philosopersapi.com"
 DJANGO_SECRET_KEY="secret"

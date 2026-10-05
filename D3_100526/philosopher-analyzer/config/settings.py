@@ -33,7 +33,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-OPENLIB_BASE_URL = os.getenv('OPENLIB_BASE_URL')
+PHILOSOPHERSAPI_BASE_URL = os.getenv('PHILOSOPHERSAPI_BASE_URL')
 
 
 # Application definition
