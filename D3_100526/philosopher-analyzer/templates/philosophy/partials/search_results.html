@@ -1,0 +1,20 @@
+<div id="searchResults">
+  {% for philosopher in philosophers %}
+    {% partialdef philosopher-item inline %}
+    <div id="philosopher-{{ philosopher.philosopher_id }}">
+      <p>{{ philosopher.name }}</p>
+      {% partialdef excerpt-item inline %}
+      <ul id="philosopherExcerpts" class="pl-4">
+      {% for excerpt in philosopher.excerpts %}
+      <li id="excerpt-{{ excerpt.quote_id }}">
+        <a href="#" class="blue-500">
+          {{ excerpt.quote }}
+        </a>
+      </li>
+      {% endfor %}
+      </ul>
+      {% endpartialdef %}
+    </div>
+    {% endpartialdef %}
+  {% endfor %}
+</div>

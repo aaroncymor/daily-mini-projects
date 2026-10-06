@@ -1,2 +1,2 @@
-PHILOSOPHERSAPI_BASE_URL="https://philosopersapi.com"
+PHILOSOPHERSAPI_BASE_URL="https://philosophersapi.com"
 DJANGO_SECRET_KEY="secret"

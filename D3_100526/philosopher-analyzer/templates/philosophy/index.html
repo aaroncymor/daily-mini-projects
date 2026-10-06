@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section id="excerpt">
+  <div id="searchPhilosopher">
+    <form>
+      {% csrf_token %}
+      <input
+        hx-post="{% url 'excerpt_search' %}"
+        hx-target="#searchResults"
+        hx-swap="outerHTML"
+        hx-trigger="keyup changed delay:500ms"
+        placeholder="Search philosopher..."
+        type="search"
+        name="author"
+      />
+    </form>
+
+    <div x-data="{ selectedExcerpts: [] }">
+      {% partialdef philosopher_list inline%}
+      <div id="searchResults">
+        {% for philosopher in philosophers %}
+          <div id="philosopher-{{ philosopher.philosopher_id }}">
+            <p>{{ philosopher.name }}</p>
+
+            <ul id="philosopherExcerpts" class="pl-4">
+              {% for excerpt in philosopher.excerpts %}
+              <li id="excerpt-{{ excerpt.quote_id }}">
+                <button
+                  class="cursor-pointer"
+                  @click="
+                    if (selectedExcerpts.length < 2) {
+                      selectedExcerpts.push({
+                        id: '{{ excerpt.quote_id }}',
+                        author: '{{ philosopher.name }}',
+                        quote: '{{ excerpt.quote }}',
+                        unique_words: '{{ excerpt.unique_words }}',
+                        total_words: '{{ excerpt.total_words }}',
+                        lexical_density: '{{ excerpt.lexical_density }}'
+                      });
+                    }"
+                >
+                  {{ excerpt.quote }}
+                </button>
+              </li>
+              {% endfor %}
+            </ul>
+
+          </div>
+        {% endfor %}
+      </div>
+      {% endpartialdef %}
+
+      <div class="compareContainer">
+        <template x-if="selectedExcerpts.length >=2">
+          <p class="text-gray-400">Maximum of 2 items allowed.</p>
+        </template>
+
+        <template x-for="(item, index) in selectedExcerpts" :key="index">
+          <div class="flex flex-row">
+            <div class="flex flex-col">
+              <blockquote x-text="item.quote"></blockquote>
+              <p x-text="item.author"></p>
+              <p x-text="item.unique_words"></p>
+              <p x-text="item.total_words"></p>
+              <p x-text="item.lexical_density"></p>
+            </div>
+
+            <button
+              type="button"
+              @click="selectedExcerpts.splice(index, 1)"
+              title="Remove item"
+            >
+              x
+            </button
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+
+</section>
+{% endblock %}

@@ -2,11 +2,20 @@ from django.db import models
 
 
 # Create your models here.
+class Philosopher(models.Model):
+    philosopher_id = models.UUIDField(primary_key=True)
+    name = models.CharField(max_length=255)
+
+
 class Excerpt(models.Model):
-    philosopher_id = models.TextField()
-    author = models.CharField(max_length=100)
-    title_of_work = models.CharField(max_length=255)
+    quote_id = models.UUIDField(primary_key=True)
     quote = models.TextField()
+    philosopher = models.ForeignKey(
+        Philosopher,
+        on_delete=models.CASCADE,
+        related_name='excerpts'
+    )
+    title_of_work = models.CharField(max_length=255)
     unique_words = models.IntegerField(default=0)
     total_words = models.IntegerField(default=0)
 
