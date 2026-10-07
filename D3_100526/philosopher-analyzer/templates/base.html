@@ -14,9 +14,10 @@
   {% block xtra_head %}{% endblock%}
 </head>
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-ext="response-targets">
+    <main>
     {% block content %}
     {% endblock %}
-
+    </main>
     {% block xtra_script %}{% endblock%}
   </body>
 </html>
