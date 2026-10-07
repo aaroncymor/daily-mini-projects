@@ -1,0 +1,2 @@
+JIKAN_BASE_URL="https://jikan.lucashdo.com/v1"
+DJANGO_SECRET_KEY="secret"

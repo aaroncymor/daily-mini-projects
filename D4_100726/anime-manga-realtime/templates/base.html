@@ -1,0 +1,25 @@
+{% load tailwind_tags %}
+{% tailwind_css %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Anime & Manga Realtime Filter Engine</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="" />
+  <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/htmx-ext-response-targets@2.0.4" integrity="sha384-T41oglUPvXLGBVyRdZsVRxNWnOOqCynaPubjUVjxhsjFTKrFJGEMm3/0KGmNQ+Pg" crossorigin="anonymous"></script>
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <!--<link rel="icon" href="favicon.png">-->
+  {% block xtra_head %}{% endblock%}
+</head>
+  <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-ext="response-targets">
+    {% block content %}
+    {% endblock %}
+
+    {% block xtra_script %}{% endblock%}
+  </body>
+</html>
+
