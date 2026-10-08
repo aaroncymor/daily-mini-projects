@@ -1,5 +1,5 @@
-from collections.abc import MutableMapping
-from typing import Any, Optional
+from typing import Any, Optional, Union
+from collections.abc import MutableMapping, Iterator
 
 import httpx
 
@@ -16,7 +16,7 @@ def memoize(key: str, value: Any):
 
 def get_animes_or_mangas(
     category: str, title: str, page: Optional[int] = 1
-) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+) -> Iterator[Union[int, bool]]:
 
     if category not in (ANIME_CHOICE, MANGA_CHOICE):
         raise ValueError(f"Invalid category: {category}.")
