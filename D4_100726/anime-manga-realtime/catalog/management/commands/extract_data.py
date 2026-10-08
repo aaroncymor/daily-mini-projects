@@ -28,14 +28,18 @@ class Command(BaseCommand):
 
         while has_nxt_page and page_num > 0:
             for item in get_animes_or_mangas(category, title, page_num):
+
                 if isinstance(item, bool):
                     has_nxt_page = item
                     page_num = page_num + 1 if has_nxt_page else -1
                     print("HAS NEXT PAGE", has_nxt_page, "PAGE NUM", page_num)
-                elif isinstance(item, MutableMapping):
+
+                if isinstance(item, MutableMapping):
                     parse_and_save_data(category, item)
-            print("Sleeping for 2s")
-            time.sleep(2)
+
+            if has_nxt_page:
+                print("Sleeping for 2s")
+                time.sleep(2)
 
 
 
