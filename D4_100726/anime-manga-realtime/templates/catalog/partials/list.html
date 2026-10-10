@@ -1,0 +1,35 @@
+<div id="catalogItems">
+{% for catalog_item in catalog_items %}
+  {% partialdef catalog_item inline %}
+    {% if forloop.last %}
+      <div
+        hx-trigger="revealed"
+        hx-get="{% url 'catalog_list' %}?page={{ page_obj.number|add:1 }}"
+        hx-swap="afterend"
+      >
+    {% else %}
+      <div>
+    {% endif %}
+        <div
+          id="catalog-{{ catalog_item.id }}"
+          class="text-blue-700 cursor-pointer"
+          @click="
+            modalIsOpen = 'true';
+
+            activeCatalog = {
+              id: '{{ catalog_item.id }}',
+              title: '{{ catalog_item.title|escapejs }}',
+              description: '{{ catalog_item.description|escapejs }}',
+              category: '{{ catalog_item.category }}',
+              type: '{{ catalog_item.catalog_type|escapejs }}',
+              score: '{{ catalog_item.score }}',
+              episodes_volumes: '{{ catalog_item.episodes_volumes }}',
+            };
+          "
+        >
+          <span>{{ catalog_item.title }}</span>
+        </div>
+      </div>
+    {% endpartialdef %}
+{% endfor %}
+</div>

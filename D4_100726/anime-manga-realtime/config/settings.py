@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # third-party
+    "django_htmx",
     "tailwind",
     "theme",
     # custom
@@ -60,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_htmx.middleware.HtmxMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -139,4 +141,5 @@ MAILERS = {
     },
 }
 
+SHOW_NUM_ITEMS = (10, 25, 50, 100)
 TAILWIND_APP_NAME = "theme"

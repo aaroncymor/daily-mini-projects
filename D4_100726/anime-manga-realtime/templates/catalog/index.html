@@ -4,14 +4,17 @@
 {% tailwind_css %}
 
 {% block content %}
-  <h1 class="text-lg font-bold text-blue-500">
+  <h1 class="text-lg font-bold text-green-500">
     Welcome world
   </h1>
   <hr />
-  <div class="flex flex-row">
-    <p>one</p>
-    <p>two</p>
-    <p>three</p>
+
+  <div class="catalog-container" x-data="{
+    activeCatalog: null,
+    modalIsOpen: false
+  }">
+    {% include 'catalog/partials/modal.html' %}
+    {% include 'catalog/partials/list.html' %}
   </div>
 {% endblock %}
 
