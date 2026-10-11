@@ -4,17 +4,33 @@
 {% tailwind_css %}
 
 {% block content %}
-  <h1 class="text-lg font-bold text-green-500">
-    Welcome world
-  </h1>
-  <hr />
+<h1 class="text-lg font-bold text-green-500">
+  Catalog Search
+</h1>
+<hr />
 
-  <div class="catalog-container" x-data="{
+<div class="catalog-container" x-data="{
     activeCatalog: null,
-    modalIsOpen: false
+    modalIsOpen: false,
+    search: {}
   }">
-    {% include 'catalog/partials/modal.html' %}
-    {% include 'catalog/partials/list.html' %}
-  </div>
+  <form id="catalogSearch" hx-get="{% url 'catalog_list' %}" hx-target="#catalogItems" hx-swap="innerHTML">
+    <input type="search" name="title" x-model="search.title" placeholder="Search anime/manga title...">
+    <label for="category">Category</label>
+    <select name="category" x-model="search.category">
+      <option value="anime">Anime</option>
+      <option value="manga">Manga</option>
+    </select>
+    <label for="show">Show items per page</label>
+    <select name="show" x-model="search.show">
+      <option value="10">10</option>
+      <option value="25">25</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+    </select>
+    <button type="submit">Search</button>
+  </form>
+  {% include 'catalog/partials/modal.html' %}
+  {% include 'catalog/partials/list.html' %}
+</div>
 {% endblock %}
-
