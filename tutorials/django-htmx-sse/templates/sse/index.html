@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="m-4 text-bold text-lg">Tasks</h1>
+<section hx-ext="sse" sse-connect="/sse/notifications">
+  <!-- This is where we will display our tasks -->
+  <div sse-swap="task_event" hx-swap="innerHTML" class="grid grid-cols-1 md:grid-cols-4 m-4 p-4 gap-2 text-wrap">
+  </div>
+  <div sse-swap="notification_event" hx-swap="innerHTML" id="notification"
+    class="hidden fixed m-4 min-w-64 ms-32 bg-gray-200 text-gray-800 text-center rounded-sm p-4 z-1 bottom-0 right-0 text-wrap">
+  </div>
+</section>
+{% endblock %}

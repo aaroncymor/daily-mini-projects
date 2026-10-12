@@ -1,0 +1,35 @@
+{% load django_htmx %}
+{% load tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Django & HTMX SSE Example</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="" />
+  {% htmx_script %}
+  <script src="https://cdn.jsdelivr.net/npm/htmx-ext-sse@2.2.4" integrity="sha384-A986SAtodyH8eg8x8irJnYUk7i9inVQqYigD6qZ9evobksGNIXfeFvDwLSHcp31N" crossorigin="anonymous"></script>
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  {% tailwind_css %}
+  <!--<link rel="icon" href="favicon.png">-->
+  {% block xtra_head %}{% endblock%}
+</head>
+  <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <main>
+      <!-- Navigation -->
+      <nav class="m-0 p-4 overflow-hidden bg-gray-800">
+        <li class="inline">
+          <a class="text-gray-200" href="/">Home</a>
+        </li>
+      </nav>
+
+      <!-- Main Content -->
+      {% block content %}
+      {% endblock %}
+    </main>
+
+    {% block xtra_script %}{% endblock%}
+  </body>
+</html>
+

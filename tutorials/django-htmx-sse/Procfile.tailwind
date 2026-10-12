@@ -1,0 +1,2 @@
+django: poetry run python manage.py runserver 0.0.0.0:8000
+tailwind: cd theme/static_src && npm run dev
