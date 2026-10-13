@@ -1,0 +1,10 @@
+<div
+    class="block max-w-sm rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+    <h5 class="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">{{ task.title }}</h5>
+    <ul class="font-normal text-gray-700 dark:text-gray-400">
+        <li class="pb-2 font-bold text-blue-800">@{{ task.assigned_user.username }} <span
+                class="text-black font-normal">
+                by </span><span class="text-red-800">{{ task.due_by }}</span></li>
+        <li class="py-2">from <span class="text-green-800">@{{ task.created_by }}<span></li>
+    </ul>
+</div>
