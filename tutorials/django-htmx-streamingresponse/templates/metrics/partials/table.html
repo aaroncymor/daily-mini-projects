@@ -1,0 +1,19 @@
+<table>
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Region</th>
+      <th>Amount</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for sale in sales %}
+    {% include 'metrics/partials/row.html' %}
+    {% empty %}
+    <tr>
+      <td colspan="4">No sales match the current filter.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

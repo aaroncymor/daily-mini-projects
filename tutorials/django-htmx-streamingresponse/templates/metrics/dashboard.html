@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form hx-get="{% url 'metrics:sales_table' %}" hx-target="#sales-table" hx-trigger="change, submit"
+  hx-swap="innerMorph">
+  <select name="region">
+    <option value="">All Regions</option>
+    <option value="north">North</option>
+    <option value="south">South</option>
+  </select>
+  <input type="text" name="product" placeholder="Product..." />
+</form>
+
+{% include 'metrics/partials/stats.html' %}
+
+<div id="sales-table">
+  {% include 'metrics/partials/table.html' %}
+</div>
+
+<div id="activities">
+  <ul id="activity-log" hx-get="{% url 'metrics:activity_stream' %}" hx-trigger="intersect once" hx-swap="beforeend"
+    hx-target="#activity-log">
+  </ul>
+
+</div>
+{% endblock %}

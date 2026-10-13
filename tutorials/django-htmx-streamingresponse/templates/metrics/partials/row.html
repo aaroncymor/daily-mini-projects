@@ -1,0 +1,11 @@
+<tr id="row-{{ sale.pk }}"
+  hx-get="{% url 'metrics:edit_row' sale.pk %}"
+  hx-target="#row-{{ sale.pk }}"
+  hx-swap="outerMorph"
+  style="cursor:pointer"
+>
+  <td>{{ sale.product }}</td>
+  <td>{{ sale.region }}</td>
+  <td>${{ sale.amount }}</td>
+  <td>{{ sale.created_at|date:"M d, H:i" }}</td>
+</tr>

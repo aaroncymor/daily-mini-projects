@@ -1,0 +1,26 @@
+<tr id="row-{{ sale.pk }}">
+  <td>
+    <input type="text" name="product" value="{{ sale.product }}" />
+  </td>
+  <td>{{ sale.region }}</td>
+  <td>
+    <input type="number" step="0.01" name="amount" value="{{ sale.amount }}" />
+  </td>
+  <td>
+    <button
+      type="button"
+      hx-post="{% url 'metrics:edit_row' sale.pk %}"
+      hx-include="closest tr"
+    >
+      Save
+    </button>
+    <button
+      type="button"
+      hx-get="{% url 'metrics:edit_row' sale.pk %}?cancel=1"
+      hx-target="#row-{{ sale.pk }}"
+      hx-swap="outerMorph"
+    >
+      Cancel
+    </button>
+  </td>
+</tr>
