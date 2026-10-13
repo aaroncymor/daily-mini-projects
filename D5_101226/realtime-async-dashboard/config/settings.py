@@ -36,6 +36,7 @@ ALLOWED_HOSTS: list[str] = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,10 +47,14 @@ INSTALLED_APPS = [
     "tailwind",
     "theme",
     "django_htmx",
+    # custom
+    "realtime.apps.RealtimeConfig",
 ]
 
 if DEBUG:
     INSTALLED_APPS += ["django_browser_reload"]
+
+ASGI_APPLICATION = "config.asgi.application"
 
 
 MIDDLEWARE = [

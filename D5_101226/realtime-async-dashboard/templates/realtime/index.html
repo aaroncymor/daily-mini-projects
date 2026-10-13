@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <section id="realtime-demo">
+    <p>Realtime Demo</p>
+    <!-- hx-ext="sse" enables the extension -->
+    <!-- sse-connect point to your Django stream URL -->
+    <div hx-ext="sse" sse-connect="{% url 'realtime_stream' %}">
+
+      <!-- sse-swap listens for named event "progress_updated" -->
+      <!-- HTMX automatically swaps incoming HTML fragments -->
+      <div sse-swap="progress_update">
+        Waiting for updates
+      </div>
+  </section>
+{% endblock %}

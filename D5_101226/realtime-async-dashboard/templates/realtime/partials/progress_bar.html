@@ -1,0 +1,8 @@
+<div class="progress-container">
+  <div class="bar" style="width: {{ percent }}%; background-color: pink; transition: width 0.3s ease;">
+    {{ percent }}
+  </div>
+  {% if percent == 100 %}
+  <p class="text-green-500">Complete!</p>
+  {% endif %}
+</div>
