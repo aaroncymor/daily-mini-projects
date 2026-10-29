@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold">Ichiban Kuji</h1>
+</div>
+
+<div hx-ext="sse" sse-connect="{% url 'kuji_stream' %}" sse-swap="kuji-draw" sse-close="kuji-complete"
+    class="p-6 bg-slate-900 rounded-lg">
+
+    <!-- Primary Swap Target (Updates on every 'kuji-draw' event) -->
+    <div id="current-draw-card">
+        <p class="text-gray-400">Waiting for live draw to start...</p>
+    </div>
+</div>
+
+<!-- Out-of-Band (OOB) Targets -->
+<div id="winner-feed" class="mt-4 space-y-1"></div>
+<p class="text-sm">A-Prizes Left: <span id="prize-inventory-a">2 left</span></p>
+<p class="text-sm">Total Drawn: <span id="drawn-count">0 / 5</span></p>
+<div id="draw-status" class="text-sm"></div>
+{% endblock %}

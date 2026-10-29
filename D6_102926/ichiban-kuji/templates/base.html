@@ -1,0 +1,27 @@
+{% load django_htmx %}
+{% load tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Ichiban Kuji</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="" />
+    {% htmx_script extensions="hx-sse" %}
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    {% tailwind_css %}
+
+    <!--<link rel="icon" href="favicon.png">-->
+    {% block xtra_head %}{% endblock%}
+</head>
+
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-ext="response-targets">
+    {% block content %}
+    {% endblock %}
+
+    {% block xtra_script %}{% endblock%}
+</body>
+
+</html>
