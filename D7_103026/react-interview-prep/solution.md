@@ -75,7 +75,7 @@ const fetchUsersApi = (query: string, signal?: AbortSignal): Promise<User[]> => 
 function useDebounce<T>(value: T, delay = 400): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
-  useEffect(() [118;1:3u=> {
+  useEffect(() => {
     const timer = setTimeout(() => setDebouncedValue(value), delay);
     return () => clearTimeout(timer);
   }, [value, delay]);

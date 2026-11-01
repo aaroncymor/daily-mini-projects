@@ -1,3 +1,59 @@
+Your submission shows a solid grasp of basic React component structure, but from a Senior Full-Stack Engineering perspective, there are **5 critical issues** that cause bugs or break core requirements.
+
+---
+
+### Code Review & Critical Bugs
+
+#### 1. Per-Channel Drafts Are Not Preserved
+
+* **Issue:** You used a single string state: `const [draftMessage, setDraftMessage] = useState("")`.
+* **Impact:** Typing a draft in `#general` and switching to `#engineering` keeps the exact same text in the input box instead of saving a unique draft per channel.
+* **Fix:** Use a map/dictionary keyed by channel ID: `Record<string, string>`.
+
+#### 2. Direct State Mutation inside `.map()` Updaters
+
+* **Issue:** In your `setMessages` calls, you write:
+```javascript
+messages[channelId].map((msg) => (msg.id === msgId) ? {...msg, status: 'sent'} : msg)
+return messages;
+
+```
+
+
+`Array.prototype.map` returns a **new array**—it does not mutate `messages[channelId]` in place. Returning the original `messages` object means your state updates are ignored or break completely.
+* **Fix:** Immutably recreate the state container:
+```typescript
+setMessages((prev) => ({
+  ...prev,
+  [channelId]: prev[channelId].map((msg) =>
+    msg.id === msgId ? { ...msg, status: 'sent' } : msg
+  ),
+}));
+
+```
+
+
+
+#### 3. Optimistic Update Order (`await` before state render)
+
+* **Issue:** You run `await sendMessageApi(msgTxt)` **before** appending `newMessage` with `status: 'sending'`.
+* **Impact:** The UI waits 800ms for the API promise to resolve before showing the message. The core purpose of an optimistic UI is to show the message immediately as `'sending'` *before* triggering the network call.
+
+#### 4. Type Mismatch in `updateChannel`
+
+* **Issue:** Function signature is `updateChannel(channelId?: number, ...)` but `Channel.id` is defined as a `string` (`'general'`, `'engineering'`). Passing a string into a number type breaks strict TS compilation.
+
+#### 5. `retryMsgId` Comparison Logic
+
+* **Issue:** In `sendMessage`, you check `if (retryMsgId !== "")`. However, `retryMsgId` was initialized to `null`. In JS, `null !== ""` evaluates to `true`, causing execution to branch into the wrong path on initial message sends.
+
+---
+
+### Refactored Senior-Level Solution
+
+Here is the complete, idiomatic solution addressing state immutability, per-channel draft tracking, and proper optimistic updates with retry:
+
+```tsx
 import React, { useState } from 'react';
 
 export interface Message {
@@ -214,3 +270,4 @@ export default function ChatDashboard() {
     </div>
   );
 }
+```
